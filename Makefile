@@ -60,6 +60,13 @@ plot: output.txt
 calculate: calculate.c
 	$(CC) $(CFLAGS_common) $^ -o $@
 
+thread_test:
+	for i in `seq 1 128`; \
+	do $(MAKE) phonebook_opt THREAD=$$i --silent; \
+	./phonebook_opt; echo "\n"; \
+	rm -rf phonebook_opt; \
+	done;
+
 .PHONY: clean
 clean:
 	$(RM) $(EXEC) *.o perf.* \
