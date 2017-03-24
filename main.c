@@ -125,16 +125,18 @@ int main(int argc, char *argv[])
         pthread_join(threads[i], NULL);
 
     /* Connect the linked list of each thread */
-    for (int i = 0; i < THREAD_NUM; i++) {
-        if (i == 0) {
-            pHead = thread_args[i]->lEntry_head->pNext;
-            DEBUG_LOG("Connect %d head string %s %p\n", i,
-                      pHead->lastName, thread_args[i]->data_begin);
-        } else {
-            e->pNext = thread_args[i]->lEntry_head->pNext;
-            DEBUG_LOG("Connect %d head string %s %p\n", i,
-                      e->pNext->lastName, thread_args[i]->data_begin);
-        }
+    pHead = thread_args[0]->lEntry_head->pNext;
+    DEBUG_LOG("Connect %d head string %s %p\n", 0,
+              pHead->lastName, thread_args[0]->data_begin);
+    e = thread_args[0]->lEntry_tail;
+    DEBUG_LOG("Connect %d tail string %s %p\n", 0,
+              e->lastName, thread_args[0]->data_begin);
+    DEBUG_LOG("round %d\n", 0);
+
+    for (int i = 1; i < THREAD_NUM; i++) {
+        e->pNext = thread_args[i]->lEntry_head->pNext;
+        DEBUG_LOG("Connect %d head string %s %p\n", i,
+                  e->pNext->lastName, thread_args[i]->data_begin);
 
         e = thread_args[i]->lEntry_tail;
         DEBUG_LOG("Connect %d tail string %s %p\n", i,
