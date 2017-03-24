@@ -11,6 +11,10 @@ ifdef THREAD
 CFLAGS_opt  += -D THREAD_NUM=${THREAD}
 endif
 
+ifeq ($(strip $(THREAD_TEST)),1)
+CFLAGS_opt  += -D THREAD_TEST
+endif
+
 ifeq ($(strip $(DEBUG)),1)
 CFLAGS_opt += -DDEBUG -g
 endif
@@ -60,14 +64,17 @@ plot: output.txt
 calculate: calculate.c
 	$(CC) $(CFLAGS_common) $^ -o $@
 
-thread_test:
+thread_test: main.c
 	for i in `seq 1 128`; \
-	do $(MAKE) phonebook_opt THREAD=$$i --silent; \
+	do $(MAKE) phonebook_opt THREAD_TEST=1 THREAD=$$i --silent; \
 	./phonebook_opt; echo "\n"; \
 	rm -rf phonebook_opt; \
 	done;
 
+thread_test_plot: clean thread_test opt.txt
+	gnuplot scripts/thread_test.gp
+
 .PHONY: clean
 clean:
 	$(RM) $(EXEC) *.o perf.* \
-	      	calculate orig.txt opt.txt output.txt runtime.png align.txt
+	      	calculate orig.txt opt.txt output.txt *.png align.txt

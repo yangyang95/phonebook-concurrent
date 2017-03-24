@@ -170,7 +170,11 @@ int main(int argc, char *argv[])
     /* Write the execution time to file. */
     FILE *output;
     output = fopen(OUTPUT_FILE, "a");
+#if defined(THREAD_TEST)
+    fprintf(output, "%d append() findName() %lf %lf\n", THREAD_NUM, cpu_time1, cpu_time2);
+#else
     fprintf(output, "append() findName() %lf %lf\n", cpu_time1, cpu_time2);
+#endif
     fclose(output);
 
     printf("execution time of append() : %lf sec\n", cpu_time1);
