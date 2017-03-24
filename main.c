@@ -44,18 +44,14 @@ static double diff_in_second(struct timespec t1, struct timespec t2)
 
 int main(int argc, char *argv[])
 {
+    struct timespec start, end;
+    double cpu_time1, cpu_time2;
+
 #ifndef OPT
     FILE *fp;
     int i = 0;
     char line[MAX_LAST_NAME_SIZE];
-#else
-    struct timespec mid;
-#endif
-    struct timespec start, end;
-    double cpu_time1, cpu_time2;
 
-    /* File preprocessing */
-#ifndef OPT
     /* check file opening */
     fp = fopen(DICT_FILE, "r");
     if (!fp) {
@@ -63,6 +59,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 #else
+    struct timespec mid;
+
     text_align(DICT_FILE, ALIGN_FILE, MAX_LAST_NAME_SIZE);
     int fd = open(ALIGN_FILE, O_RDONLY | O_NONBLOCK);
     off_t file_size = fsize(ALIGN_FILE);
