@@ -45,7 +45,6 @@ thread_arg *createThread_arg(char *data_begin, char *data_end,
 void append(void *arg)
 {
     struct timespec start, end;
-    double cpu_time;
 
     clock_gettime(CLOCK_REALTIME, &start);
 
@@ -66,9 +65,11 @@ void append(void *arg)
                   t_arg->threadID, t_arg->lEntry_tail->lastName);
     }
     clock_gettime(CLOCK_REALTIME, &end);
-    cpu_time = diff_in_second(start, end);
 
+#ifdef DEBUG
+    double cpu_time = diff_in_second(start, end);
     DEBUG_LOG("thread take %lf sec, count %d\n", cpu_time, count);
+#endif
 
     pthread_exit(NULL);
 }
@@ -81,6 +82,7 @@ void show_entry(entry *pHead)
     }
 }
 
+#ifdef DEBUG
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
     struct timespec diff;
@@ -93,3 +95,4 @@ static double diff_in_second(struct timespec t1, struct timespec t2)
     }
     return (diff.tv_sec + diff.tv_nsec / 1000000000.0);
 }
+#endif
