@@ -47,7 +47,13 @@ int main(int argc, char *argv[])
     struct timespec start, end;
     double cpu_time1, cpu_time2;
 
+    /* Build the entry */
+    entry *pHead, *e;
+    printf("size of entry : %lu bytes\n", sizeof(entry));
+
+
 #ifndef OPT
+
     FILE *fp;
     int i = 0;
     char line[MAX_LAST_NAME_SIZE];
@@ -58,19 +64,38 @@ int main(int argc, char *argv[])
         printf("cannot open the file\n");
         return -1;
     }
+
+    pHead = (entry *) malloc(sizeof(entry));
+    e = pHead;
+    e->pNext = NULL;
+
+#if defined(__GNUC__)
+    __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
+#endif
+    /* Start timing */
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    while (fgets(line, sizeof(line), fp)) {
+        while (line[i] != '\0')
+            i++;
+        line[i - 1] = '\0';
+        i = 0;
+        e = append(line, e);
+    }
+
+    /* Stop timing */
+    clock_gettime(CLOCK_REALTIME, &end);
+
+    /* close file as soon as possible */
+    fclose(fp);
+
 #else
     struct timespec mid;
 
     text_align(DICT_FILE, ALIGN_FILE, MAX_LAST_NAME_SIZE);
     int fd = open(ALIGN_FILE, O_RDONLY | O_NONBLOCK);
     off_t file_size = fsize(ALIGN_FILE);
-#endif
 
-    /* Build the entry */
-    entry *pHead, *e;
-    printf("size of entry : %lu bytes\n", sizeof(entry));
-
-#if defined(OPT)
     char *map;
     entry *entry_pool;
     pthread_t threads[THREAD_NUM];
@@ -118,30 +143,6 @@ int main(int argc, char *argv[])
     }
     /* Stop timing */
     clock_gettime(CLOCK_REALTIME, &end);
-#else /* ! OPT */
-    pHead = (entry *) malloc(sizeof(entry));
-    e = pHead;
-    e->pNext = NULL;
-
-#if defined(__GNUC__)
-    __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
-#endif
-    /* Start timing */
-    clock_gettime(CLOCK_REALTIME, &start);
-
-    while (fgets(line, sizeof(line), fp)) {
-        while (line[i] != '\0')
-            i++;
-        line[i - 1] = '\0';
-        i = 0;
-        e = append(line, e);
-    }
-
-    /* Stop timing */
-    clock_gettime(CLOCK_REALTIME, &end);
-
-    /* close file as soon as possible */
-    fclose(fp);
 #endif
 
     cpu_time1 = diff_in_second(start, end);
