@@ -47,5 +47,3 @@ matrix:
 
 script:
   - make
-  - make CHECK_LEAK=1
-  - make DEBUG=1
