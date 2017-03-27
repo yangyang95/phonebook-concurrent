@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS_common ?= -Wall -std=gnu99
+CFLAGS_common ?= -Wall -std=gnu99 -lrt
 CFLAGS_orig = -O0
 CFLAGS_opt  = -O0 -pthread -g -pg
 
