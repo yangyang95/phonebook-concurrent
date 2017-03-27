@@ -8,7 +8,7 @@
 
 #define OPT 1
 
-typedef struct _detail {
+typedef struct {
     char firstName[16];
     char email[16];
     char phone[10];
@@ -30,7 +30,7 @@ typedef struct __PHONE_BOOK_ENTRY {
 
 entry *findName(char lastname[], entry *pHead);
 
-typedef struct _thread_argument {
+typedef struct {
     char *data_begin;
     char *data_end;
     int threadID;
