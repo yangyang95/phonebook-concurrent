@@ -31,4 +31,4 @@ script:
   - make
   - ./phonebook_orig
   - ./phonebook_opt
-  - make DEBUG=1
+  - make clean && make DEBUG=1
