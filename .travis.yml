@@ -28,7 +28,5 @@ matrix:
     compiler: gcc-6
 
 script:
-  - make
-  - ./phonebook_orig
-  - ./phonebook_opt
-  - make clean && make DEBUG=1
+  - make && ./phonebook_orig && ./phonebook_opt
+  - make clean && make DEBUG=1 && ./phonebook_orig && ./phonebook_opt
